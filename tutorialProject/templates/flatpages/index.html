@@ -1,0 +1,20 @@
+<!-- наследование шаблона -->
+{% extends 'flatpages/indexLayout.html' %}
+<!-- работа со статическими файлами -->
+{% load static %}
+<!-- текст title документа -->
+{% block title %} Приветствие на нашем сайте {% endblock title %}
+
+{% block page_styles %}
+<link rel="stylesheet" href="{% static 'cover.css' %}">
+{% endblock page_styles %}
+
+
+{% block abracadabra %}
+<!-- текст внутри блока abracadabra -->
+<!-- Ниже текст из бд flatpage.content -->
+<h1 class="mt-5"> {{flatpage.title}}</h1>
+<p>
+    {{flatpage.content}}
+</p>
+{% endblock abracadabra %}

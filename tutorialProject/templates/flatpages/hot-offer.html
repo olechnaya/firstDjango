@@ -1,0 +1,12 @@
+<!-- наследование шаблона -->
+{% extends 'flatpages/defaultLayout.html'%}
+
+{% block abracadabra %}
+<!-- текст внутри блока abracadabra -->
+<!-- Ниже текст из бд flatpage.content -->
+
+<h1 class="mt-5"> {{flatpage.title}}</h1>
+{{flatpage.content}}
+
+
+{% endblock abracadabra %}

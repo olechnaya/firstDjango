@@ -1,0 +1,19 @@
+<!-- наследование шаблона -->
+{% extends 'flatpages/defaultLayout.html'%}
+
+<!-- работа со статическими файлами -->
+{% load static %}
+
+{% block title%} {{flatpage.title}} {% endblock title%}
+
+{% block page_styles %}
+<link rel="stylesheet" href="{% static 'general.css' %}">
+{% endblock page_styles %}
+
+{% block abracadabra %}
+<h2>{{ flatpage.title }}</h2>
+    <hr>
+    <h3>Наши контакты:</h3>
+    {{ flatpage.content }}
+    
+    {% endblock abracadabra %}
