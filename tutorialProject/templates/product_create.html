@@ -1,0 +1,63 @@
+<!--  наследуемся от шаблона default.html, который мы создавали ещё во времена flatpages -->
+{% extends 'flatpages/defaultLayout.html' %} 
+{% load static %}
+
+<!-- Название у нас будет proudcts -->
+{% block title %}
+Products
+{% endblock title %}
+
+
+{% block page_styles %}
+<link rel="stylesheet" href="{% static 'general.css' %}">
+{% endblock page_styles %}
+ 
+<!-- В контенте на странице мы выводим сам товар, айди которого было передано в адрес -->
+{% block abracadabra %}
+
+
+{% if isUpdateView  %}
+        <h1>Редактировать товар</h1>
+    {% else %}
+        <h1>Добавить товар</h1>
+{% endif %}
+<form method="POST">
+    {% csrf_token %}
+        <div class="col-6 mb-3">
+            {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
+           
+        </div>
+        {% if isUpdateView  %}
+            <input type="submit" value="Сохранить изменения" class="btn btn-primary">
+            {% else %}
+            <input type="submit" value="Добавляем" class="btn btn-primary">
+        {% endif %}
+     
+    <!-- <div class="row  align-items-end">
+        <div class="col">
+            <label for="name">Name</label>
+            <input name="name" type="text">
+        </div>
+        <div class="col">
+            <label for="price">Price</label>
+            <input name="price" min="0">
+        </div>
+        <div class="col">
+            <label for="quantity">Quantity</label>
+            <input name="quantity" min="1"> -->
+        <!-- Здесь будет список категорий. --> 
+        <!-- </div>
+        <div class="col">
+        <select name="category" size="4"> 
+            {% for category in categories %} 
+                <option value="{{ category.id }}"> {{ category.name }} </option>
+            {% endfor %} 
+        </select> 
+        </div>
+     <div class="col-auto">
+        <input type="submit" value="Добавить товар"> 
+     </div>  
+    </div> -->
+</form>
+
+{% endblock abracadabra %}

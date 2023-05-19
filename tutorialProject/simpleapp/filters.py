@@ -1,5 +1,4 @@
 import django_filters as filters # импортируем filterset, чем-то напоминающий знакомые дженерики
-from django import forms
 from .models import Product, Category
  
  
@@ -12,8 +11,7 @@ class ProductFilter(filters.FilterSet):
         label = 'Категории',
         queryset = Category.objects.all()
     )
-    category = forms.ModelChoiceField(queryset=Category.objects.values())
-   
+       
     # Здесь в мета классе надо предоставить модель и указать поля, по которым будет фильтроваться (т.е. подбираться) информация о товарах
     class Meta:
       model = Product
@@ -24,3 +22,4 @@ class ProductFilter(filters.FilterSet):
       #           'price': ['lt'], # цена должна быть меньше или равна тому, что указал пользователь
       #           'category': ['exact'],
       # }
+      

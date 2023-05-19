@@ -1,12 +1,14 @@
 from django.shortcuts import render
-#from django.views.generic import ListView, DetailView  # импортируем класс, который говорит нам о том, что в этом представлении мы будем выводить список объектов из БД
 from django.views import View # импортируем простую вьюшку
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView, CreateView, DeleteView, DetailView # импоритируем необходимые дженерики
 #from django.core.paginator import Paginator # импортируем класс, позволяющий удобно осуществлять постраничный вывод
 
+from django.core.paginator import Paginator
 
-from .models import Product
+from .models import Product, Category
 from .filters import ProductFilter
+from .forms import ProductForm
+
 # from datetime import datetime 
  
  
@@ -41,15 +43,71 @@ class ProductList(ListView):
     context_object_name = 'products'
     ordering = ['-price']
     paginate_by = 1 # поставим постраничный вывод в один элемент
+    form_class = ProductForm # добавляем форм класс, чтобы получать доступ к форме через метод POST
 
     def get_context_data(self, **kwargs): # забираем отфильтрованные объекты переопределяя метод get_context_data у наследуемого класса (привет, полиморфизм, мы скучали!!!)
         context = super().get_context_data(**kwargs)
         context['filter'] = ProductFilter(self.request.GET, queryset=self.get_queryset()) # вписываем наш фильтр в контекст
+        
+        # ОБЯЗАТЕЛЬНО ДОБАВИТЬ ЧТОБЫ НАПЕЧАТАЛИСЬ КАТЕГОРИИ В ФОРМЕ ДОБАВЛЕНИЯ ТОВАРА
+        # context['categories'] = Category.objects.all()
+        # context['form'] = ProductForm()
         return context
+    
+    def post(self,request, *args, **kwargs):
+        form = self.form_class(request.POST) # создаём новую форму, забиваем в неё данные из POST-запроса 
+ 
+        if form.is_valid(): # если пользователь ввёл всё правильно и нигде не накосячил, то сохраняем новый товар
+            form.save()
+ 
+        return super().get(request, *args, **kwargs)
+        # # берём значения для нового товара из POST-запроса отправленного на сервер
+        # name = request.POST['name']
+        # quantity = request.POST['quantity']
+        # category_id = request.POST['category']
+        # price = request.POST['price']
+
+        # product = Product(
+        #     name=name,
+        #     quantity=quantity,
+        #     category_id=category_id,
+        #     price=price
+        # )
+
+        # product.save()
+        # return super().get(request,*args, **kwargs)
 
 # создаём представление, в котором будут детали конкретного отдельного товара
 # class ProductDetail(DetailView):
-class ProductDetail(View):
-    model = Product 
+class ProductDetailView(DetailView):
+    # model = Product 
     template_name = 'product.html'
-    context_object_name = 'product'
+    queryset = Product.objects.all()
+    # context_object_name = 'product'
+
+class ProductCreateView(CreateView):
+    template_name = 'product_create.html'
+    form_class = ProductForm
+
+# дженерик для редактирования объекта
+class ProductUpdateView(UpdateView):
+    template_name = 'product_create.html'
+    form_class = ProductForm
+ 
+    # метод get_object мы используем вместо queryset, чтобы получить информацию об объекте который мы собираемся редактировать
+    def get_object(self, **kwargs):
+        id = self.kwargs.get('pk')
+        return Product.objects.get(pk=id)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)        
+        context['isUpdateView'] = True # добавим ещё одну пустую переменную, чтобы на её примере посмотреть работу другого фильтра
+        return context
+ 
+ 
+# дженерик для удаления товара
+class ProductDeleteView(DeleteView):
+    template_name = 'product_delete.html'
+    queryset = Product.objects.all()
+    success_url = '/products/'
+ 

@@ -1,7 +1,7 @@
 {% load flatpages %}
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru" class="h-100">
+<html lang="ru" class="">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,14 +20,14 @@
     <div class="container d-flex w-100 p-3 mx-auto flex-column">
       <header class="row">
         <div class="col-md-3 mb-2 mb-md-0">
-          <h3 class="float-md-start mb-0">Django</h3>
+          <h3 class="float-md-start mb-0">DjangoMagaz</h3>
         </div>
         {% get_flatpages as flatpages %}
         <nav class="nav col-md-6 mb-2 justify-content-center mb-md-0">
             {% for page in flatpages %}
             <li><a href="{{ page.url }}" class="nav-link px-2">{{ page.title }}</a></li>
             {% endfor %}
-            <li><a href="/hot-offer/" class="nav-link link-secondary">Горячие предложения</a></li>
+            <li><a href="{% url 'products'  %}" class="nav-link">Каталог</a></li>
         </nav>
         
   

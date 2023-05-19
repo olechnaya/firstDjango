@@ -1,4 +1,6 @@
 {% extends 'flatpages/defaultLayout.html' %} 
+<!-- работа со статическими файлами -->
+{% load static %}
 
 {% load widget_tweaks %}
 
@@ -7,8 +9,13 @@
 Products
 {% endblock title %}
 
+{% block page_styles %}
+<link rel="stylesheet" href="{% static 'general.css' %}">
+{% endblock page_styles %}
+
 {% block abracadabra %}
 <h1>Все товары</h1>
+<a href=""></a>
 <form method="GET">
     <div class="row  align-items-end">
         <div class="col">
@@ -39,7 +46,7 @@ Products
      
 </form>
 <hr>
-{% if products %} <!-- Если есть товары, то выводим таблицу с ними -->
+{% if products %} <!--Если есть товары, то выводим таблицу с ними !-->
 <table class="table">
     <thead class="thead-dark">
         <tr>
@@ -61,7 +68,11 @@ Products
         {% for product in filter.qs %} <!-- поменяем products на filter.qs, т.к. теперь мы забираем уже отобранную по каким-то параметрам информацию -->
         <tr>
             <td>
-                {{ product.name|title }}
+               <p> <a href="{% url 'product' product.id %}">{{ product.name|title }}</a> </p>               
+               <p>
+                <a href="{% url 'product_update' product.id %}" class="btn btn-outline-primary btn-sm">Редактировать</a>
+                <a href="{% url 'product_delete' product.id %}" class="btn btn-outline-danger btn-sm">Удалить</a>
+               </p> 
             </td>
             <td>
                 {{ product.category.name|title }}
@@ -76,9 +87,31 @@ Products
         {% endfor %}
     </tbody>
 </table>
-
-
 {% else %}
     <h2>Товаров нет!</h2>
+{% endif %}
+<div class="d-grid gap-2">
+    <a href="{% url 'product_create' %}" class="btn btn-primary" type="button">Добавить</a>
+  </div>
+{% if is_paginated %}
+ 
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+ 
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+ 
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+ 
 {% endif %}
 {% endblock abracadabra %}

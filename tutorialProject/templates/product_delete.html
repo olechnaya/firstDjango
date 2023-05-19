@@ -11,22 +11,23 @@ Products
 {% block page_styles %}
 <link rel="stylesheet" href="{% static 'general.css' %}">
 {% endblock page_styles %}
+
  
-<!-- В контенте на странице мы выводим сам товар, айди которого было передано в адрес -->
 {% block abracadabra %}
+<h2>Вы действительно хотите удалить данный товар?</h2>
 <table>
     <thead>
         <th>
-            Название
+            Name
         </th>
         <th>
-            Категория
+            Category
         </th>
         <th>
-            Цена
+            Price
         </th>
         <th>
-            Количество
+            Quantity
         </th>
     </thead>
     <tr>
@@ -44,4 +45,10 @@ Products
         </td>
     </tr>
 </table>
+ 
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить">
+</form>
+
 {% endblock abracadabra %}
