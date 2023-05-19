@@ -1,0 +1,57 @@
+{% extends 'flatpages/defaultLayout.html' %} 
+ 
+<!-- Название у нас будет proudcts -->
+{% block title %}
+Products
+{% endblock title %}
+
+{% block abracadabra %}
+<h1>Все товары</h1>
+<form method="GET">
+    {{ filter.form }}
+    <input type="submit" value="Найти"/>
+</form>
+<hr>
+{% if products %} <!-- Если есть товары, то выводим таблицу с ними -->
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                Категория
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Количество
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in filter.qs %} <!-- поменяем products на filter.qs, т.к. теперь мы забираем уже отобранную по каким-то параметрам информацию -->
+        <tr>
+            <td>
+                {{ product.name|title }}
+            </td>
+            <td>
+                {{ product.category.name|title }}
+            </td>
+            <td>
+                {{ product.price }}
+            </td>
+            <td>
+                {{ product.quantity }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% else %}
+    <h2>Товаров нет!</h2>
+{% endif %}
+{% endblock abracadabra %}

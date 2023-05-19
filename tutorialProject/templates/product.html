@@ -1,0 +1,13 @@
+<!--  наследуемся от шаблона default.html, который мы создавали ещё во времена flatpages -->
+{% extends 'flatpages/defaultLayout.html' %} 
+ 
+<!-- Название у нас будет proudcts -->
+{% block title %}
+Products
+{% endblock title %}
+ 
+<!-- В контенте на странице мы выводим сам товар, айди которого было передано в адрес -->
+{% block abracadabra %}
+<h1>{{ product.name }}</h1>
+<p>{{ product.description }}</p>
+{% endblock abracadabra %}

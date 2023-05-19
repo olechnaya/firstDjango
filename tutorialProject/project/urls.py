@@ -20,5 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
      path('pages/', include('django.contrib.flatpages.urls')),
+     path('products/', include('simpleapp.urls')), # делаем так, чтобы все адреса из нашего приложения (simpleapp/urls.py) сами автоматически подключались когда мы их добавим.
     #  path('accounts/login/', include('django.contrib.flatpages.urls')),
 ]
