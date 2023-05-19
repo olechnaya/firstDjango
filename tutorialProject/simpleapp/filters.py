@@ -6,8 +6,8 @@ from .models import Product, Category
 # создаём фильтр
 class ProductFilter(filters.FilterSet):
     name = filters.CharFilter(label='Название', lookup_expr='icontains')
-    price = filters.CharFilter(label='цена', lookup_expr='lt')
-    quantity = filters.CharFilter(label='количество', lookup_expr='gt')
+    price = filters.CharFilter(label='Цена', lookup_expr='lt')
+    quantity = filters.CharFilter(label='Количество', lookup_expr='gt')
     category = filters.ModelChoiceFilter(
         label = 'Категории',
         queryset = Category.objects.all()

@@ -1,5 +1,7 @@
 {% extends 'flatpages/defaultLayout.html' %} 
- 
+
+{% load widget_tweaks %}
+
 <!-- Название у нас будет proudcts -->
 {% block title %}
 Products
@@ -8,8 +10,33 @@ Products
 {% block abracadabra %}
 <h1>Все товары</h1>
 <form method="GET">
-    {{ filter.form }}
-    <input type="submit" value="Найти"/>
+    <div class="row  align-items-end">
+        <div class="col">
+            {{ filter.form.name.label_tag }}            
+            {% render_field filter.form.name class="form-control" placeholder="Например, порошок"%}
+           
+        </div>
+        <div class="col">
+            {{ filter.form.category.label_tag }}            
+            {% render_field filter.form.category class="form-control" %}
+           
+        </div>
+        <div class="col">
+            {{ filter.form.price.label_tag }}            
+            {% render_field filter.form.price class="form-control" %}
+           
+        </div>
+        <div class="col">
+            {{ filter.form.quantity.label_tag }}            
+            {% render_field filter.form.quantity class="form-control" %}
+           
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Найти</button>
+          </div>
+    </div>
+     <!--{{ filter.form }}-->
+     
 </form>
 <hr>
 {% if products %} <!-- Если есть товары, то выводим таблицу с ними -->
