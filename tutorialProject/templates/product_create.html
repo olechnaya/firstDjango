@@ -2,9 +2,14 @@
 {% extends 'flatpages/defaultLayout.html' %} 
 {% load static %}
 
+{% load i18n %}
+
+
+
+
 <!-- Название у нас будет proudcts -->
 {% block title %}
-Products
+Создаем продукт
 {% endblock title %}
 
 
@@ -21,9 +26,34 @@ Products
     {% else %}
         <h1>Добавить товар</h1>
 {% endif %}
+
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
+
+<!-- Current language: {{ LANGUAGE_CODE }} -->
+<!-- Available languages: {{ LANGUAGES }} -->
+<p>{% translate "Welcome to our page" %}</p>
+
+<button type="submit">{% translate "Go" %}</button>
+
+{# Translators: This is a text of the base template #}
+<p>{% blocktranslate %}A multiline translatable literal.{% endblocktranslate %}</p>
+{% for language in languages %}
+
+    <form action="{% url 'set_language' %}" method="post" id="form_{{ language.code }}" >
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ redirect_to }}" />
+        <input name="language" type="hidden" value="{{ language.code }}" />
+        </form>
+    <button class="btn btn-light" type="submit" form="form_{{ language.code }}" value="Submit">{{ language.name_local }}</button>
+{% endfor %}
+<hr/>
+
 <form method="POST">
     {% csrf_token %}
         <div class="col-6 mb-3">
+            {{  form.media }}
             {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
            
         </div>

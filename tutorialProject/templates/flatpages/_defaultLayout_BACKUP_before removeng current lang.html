@@ -66,7 +66,34 @@
         </div>
       </header>
     </div>
-    
+    <!-- {% get_current_language as LANGUAGE_CODE %} -->
+    <!-- {% get_available_languages as LANGUAGES %}
+    {% get_language_info_list for LANGUAGES as languages %}
+    <div class="languages">
+        <p>{% trans "Language" %}:</p>
+        <ul class="languages">
+            {% for language in languages %}
+            <li>
+                <a href="/{{ language.code }}/"
+                    {% if language.code == LANGUAGE_CODE %} class="selected"{% endif %}>
+                    {{ language.name_local }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div> -->
+    <!-- <header class="mb-auto">
+      <div>
+        <h3 class="float-md-start mb-0">Django</h3>
+
+          {% get_flatpages as flatpages %}
+          <nav class="nav nav-masthead justify-content-center float-md-end">
+              {% for page in flatpages %}
+               <a href="{{ page.url }}" class="nav-link fw-bold py-1 px-0">{{ page.title }}</a>
+              {% endfor %}
+          </nav>
+        </div>
+    </header> -->
   
     <main class="container h-100 p-5">
       {% block abracadabra %}

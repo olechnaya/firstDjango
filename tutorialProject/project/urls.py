@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+import simpleapp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('pages/', include('django.contrib.flatpages.urls')),
-     path('products/', include('simpleapp.urls')), # делаем так, чтобы все адреса из нашего приложения (simpleapp/urls.py) сами автоматически подключались когда мы их добавим.
+    path('pages/', include('django.contrib.flatpages.urls')),
+    path('products/', include('simpleapp.urls')), # делаем так, чтобы все адреса из нашего приложения (simpleapp/urls.py) сами автоматически подключались когда мы их добавим.
+    path("i18n/", include("django.conf.urls.i18n")),
+    path('login/', simpleapp.views.login, name='login'),
     #  path('accounts/login/', include('django.contrib.flatpages.urls')),
 ]

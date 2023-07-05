@@ -3,11 +3,14 @@ from django.views import View # импортируем простую вьюшк
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView, DetailView # импоритируем необходимые дженерики
 #from django.core.paginator import Paginator # импортируем класс, позволяющий удобно осуществлять постраничный вывод
 
-from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from .models import Product, Category
 from .filters import ProductFilter
 from .forms import ProductForm
+
+from django.utils.translation import gettext_lazy as _
 
 # from datetime import datetime 
  
@@ -53,54 +56,55 @@ class ProductList(ListView):
         # context['categories'] = Category.objects.all()
         # context['form'] = ProductForm()
         return context
-    
-    def post(self,request, *args, **kwargs):
-        form = self.form_class(request.POST) # создаём новую форму, забиваем в неё данные из POST-запроса 
- 
-        if form.is_valid(): # если пользователь ввёл всё правильно и нигде не накосячил, то сохраняем новый товар
-            form.save()
- 
-        return super().get(request, *args, **kwargs)
-        # # берём значения для нового товара из POST-запроса отправленного на сервер
-        # name = request.POST['name']
-        # quantity = request.POST['quantity']
-        # category_id = request.POST['category']
-        # price = request.POST['price']
-
-        # product = Product(
-        #     name=name,
-        #     quantity=quantity,
-        #     category_id=category_id,
-        #     price=price
-        # )
-
-        # product.save()
-        # return super().get(request,*args, **kwargs)
-
+  
+from django.core.cache import cache # импортируем наш кэш
 # создаём представление, в котором будут детали конкретного отдельного товара
 # class ProductDetail(DetailView):
 class ProductDetailView(DetailView):
     # model = Product 
     template_name = 'product.html'
     queryset = Product.objects.all()
-    # context_object_name = 'product'
+    
+    def get_object(self, *args, **kwargs): # переопределяем метод получения объекта, как ни странно
+        obj = cache.get(f'product-{self.kwargs["pk"]}', None) # кэш очень похож на словарь, и метод get действует также. Он забирает значение по ключу, если его нет, то забирает None.
+ 
+        # если объекта нет в кэше, то получаем его и записываем в кэш
+        if not obj:
+            obj = super().get_object(queryset=self.queryset) 
+            cache.set(f'product-{self.kwargs["pk"]}', obj)
+        
+        return obj
 
 class ProductCreateView(CreateView):
     template_name = 'product_create.html'
     form_class = ProductForm
 
+from django.http import HttpResponse
+from django.template import loader
+
+def login(request):
+    template = loader.get_template('login.html')
+    context = {
+        'latest_question_list':' latest_question_lis',
+    }
+    return HttpResponse(template.render(context,request))
+
+@method_decorator(login_required(login_url = "/login/"), name='dispatch')
 # дженерик для редактирования объекта
 class ProductUpdateView(UpdateView):
     template_name = 'product_create.html'
     form_class = ProductForm
- 
+     
     # метод get_object мы используем вместо queryset, чтобы получить информацию об объекте который мы собираемся редактировать
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Product.objects.get(pk=id)
     
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)        
+        context = super().get_context_data(**kwargs)
+        # month = _('April')
+        # day = '14'
+        # context['output'] = _('Today is %(month)s %(day)s') % {'month': month,'day': day} 
         context['isUpdateView'] = True # добавим ещё одну пустую переменную, чтобы на её примере посмотреть работу другого фильтра
         return context
  

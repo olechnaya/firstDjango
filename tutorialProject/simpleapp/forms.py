@@ -1,13 +1,23 @@
 from django import forms
 from django.forms import ModelForm, Select, TextInput, BooleanField
 from .models import Product, Category
+from django.utils.translation import gettext_lazy as _
+
+class NewDtInput(forms.DateTimeInput):
+    class Media:
+        css = {
+            "all": ["css/theme.css"],
+            }
+        js = ["js/jquery-3.7.0.min.js","js/calendar.min.js"]
 
 class ProductForm(ModelForm):
     error_css_class = 'error'
     required_css_class = 'required'   
-
+    checkbox = BooleanField(label='Ало, Галочка!') # добавляем галочку или же true-false поле
+    #dt = DateField(label="Датапикер")
+   
     name = forms.CharField(
-        label = 'Название',
+        label = _('first name'),
         widget=forms.TextInput(attrs={
             'placeholder': 'Например, молоко...', 
             'class':'form-control',
@@ -15,13 +25,13 @@ class ProductForm(ModelForm):
         }))
     
     price = forms.CharField(
-        label = 'Цена',
+        label = _('price'),
         widget=forms.TextInput(attrs={            
             'class':'form-control',
             'id': 'adding-item-price'
         }))
     quantity = forms.CharField(
-        label = 'Количество',
+        label = _('qwantity'),
         widget=forms.TextInput(attrs={
             'class': "form-control",
             'id': 'adding-item-quantity'
@@ -33,13 +43,16 @@ class ProductForm(ModelForm):
             'class': 'form-select', 
             'size': 3,
             'id': 'adding-item-category'
-        }))
-    
-    #check_box = BooleanField(label='Ало, Галочка!')
+        }))    
 
     class Meta:
         model = Product
-        fields = ['name', 'price', 'category', 'quantity']
+        fields = ['checkbox', 'name', 'price', 'category', 'quantity',]   
+        # fields = ['checkbox', 'dt', 'name', 'price', 'category', 'quantity',]   
+        # widgets = {
+        #     'dt': NewDtInput()
+        # }
+
         # fields = ['name', 'price', 'category', 'quantity',  'check_box']
         # widgets = {
         #     'name': TextInput(attrs={
